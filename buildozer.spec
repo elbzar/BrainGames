@@ -19,7 +19,7 @@ version = 1.0
 
 # (list) Application requirements
 # Added pillow and sdl2_ttf for stability
-requirements = python3,kivy==2.3.0,kivymd==1.1.1,sdl2_ttf==2.0.15,pillow
+requirements = python3,kivy,kivymd,pillow
 
 # (str) Supported orientation
 orientation = portrait
