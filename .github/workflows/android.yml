@@ -14,7 +14,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        # تحديد الجافا بشكل صريح يمنع فشل مرحلة الـ APK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -28,8 +27,11 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          # إضافة lld و libssl-dev ضروري جداً للربط النهائي
-          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld
+          # إضافة المكتبات الضرورية لبناء hostpython3 (sqlite, bz2, readline, etc.)
+          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev \
+          libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld \
+          python3-dev libsqlite3-dev libbz2-dev libreadline-dev tk-dev libgdbm-dev \
+          libdb5.3-dev libexpat1-dev liblzma-dev uuid-dev
           pip3 install --user --upgrade "Cython<3.0.0" buildozer
 
       - name: Build with Buildozer
