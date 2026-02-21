@@ -27,17 +27,21 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          # إضافة المكتبات الضرورية لبناء hostpython3 (sqlite, bz2, readline, etc.)
-          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev \
-          libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld \
-          python3-dev libsqlite3-dev libbz2-dev libreadline-dev tk-dev libgdbm-dev \
-          libdb5.3-dev libexpat1-dev liblzma-dev uuid-dev
-          pip3 install --user --upgrade "Cython<3.0.0" buildozer
+          # إضافة الحزم الأساسية لبناء بايثون (hostpython3)
+          sudo apt install -y build-essential git zip unzip python3-pip autoconf libtool pkg-config \
+          zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld \
+          libsqlite3-dev libbz2-dev libreadline-dev tk-dev libgdbm-dev libdb5.3-dev \
+          libexpat1-dev liblzma-dev uuid-dev libgdbm-compat-dev
+          
+          pip3 install --user --upgrade "Cython<3.0.0" "setuptools<60.0.0" buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # قبول التراخيص وبدء البناء
+          # إفراغ متغيرات البيئة الخاصة بالـ NDK الافتراضي لإجبار Buildozer على تحميل NDK 25b
+          export ANDROID_NDK_HOME=""
+          export ANDROID_SDK_HOME=""
+          
           yes | buildozer android debug
 
       - name: Upload APK
