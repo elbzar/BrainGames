@@ -13,22 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 11
+        # الجافا 11 هي السر في نجاح مرحلة الـ APK Packaging
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-
-      - name: Clean Environment
-        # حذف NDK الافتراضي لمنع التداخل مع عملية البناء
-        run: |
-          sudo rm -rf /usr/local/lib/android/sdk/ndk
-          sudo apt-get clean
 
       - name: Install dependencies
         run: |
@@ -37,14 +32,13 @@ jobs:
           libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld \
           python3-dev libsqlite3-dev libbz2-dev libreadline-dev tk-dev libgdbm-dev \
           libdb5.3-dev libexpat1-dev liblzma-dev uuid-dev libgdbm-compat-dev
-          pip3 install --user --upgrade "Cython<3.0.0" "setuptools<60.0.0" buildozer
+          pip3 install --user --upgrade "Cython<3.0.0" buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # إجبار Buildozer على تجاهل المسارات القديمة
-          export ANDROID_NDK_HOME=""
-          export ANDROID_SDK_HOME=""
+          # مسح أي ملفات مؤقتة قديمة تسبب تعارض
+          rm -rf .buildozer/android/platform/build-arm64-v8a/dists/braingames
           yes | buildozer android debug
 
       - name: Upload APK
