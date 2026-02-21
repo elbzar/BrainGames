@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-    # إجبار النظام على إصدار 22.04 المستقر جداً لبناء تطبيقات أندرويد
     runs-on: ubuntu-22.04
 
     steps:
@@ -17,20 +16,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' # نسخة مستقرة جداً للكيفاي
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-          # تثبيت Cython بإصدار قديم (أقل من 3.0) هو أهم خطوة للنجاح
-          pip3 install --user --upgrade "Cython<3.0.0" "setuptools<60.0.0" buildozer
+          pip3 install --user --upgrade "Cython<3.0.0" buildozer
 
       - name: Build with Buildozer
         run: |
           export PATH=$PATH:~/.local/bin
-          # مسح أي محاولات بناء تالفة سابقة قبل البدء
-          yes | buildozer android clean
+          # تم حذف أمر التنظيف لأنه يسبب خطأ في البيئة السحابية
+          # سيقوم Buildozer بتحميل الأدوات والبدء فوراً
           yes | buildozer android debug
 
       - name: Upload APK
